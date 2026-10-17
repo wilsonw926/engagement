@@ -139,6 +139,76 @@
       display: block;
       margin: 0 auto 1.5rem;
     }
+
+    /* ---- Hidden Game intro ---- */
+    @keyframes hidden-rays-spin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+    @keyframes hidden-flash {
+      0% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+    @keyframes hidden-ring-pulse {
+      0% { transform: translate(-50%, -50%) scale(0.2); opacity: 0.75; }
+      100% { transform: translate(-50%, -50%) scale(2.6); opacity: 0; }
+    }
+    @keyframes hidden-letter-in {
+      0% { transform: translateY(-120%) rotate(-25deg) scale(2.2); opacity: 0; filter: blur(6px); }
+      65% { transform: translateY(10%) rotate(4deg) scale(0.92); opacity: 1; filter: blur(0); }
+      100% { transform: translateY(0) rotate(0deg) scale(1); opacity: 1; filter: blur(0); }
+    }
+    @keyframes hidden-shake {
+      0%, 100% { transform: translate(0, 0); }
+      20% { transform: translate(-6px, 3px); }
+      40% { transform: translate(5px, -4px); }
+      60% { transform: translate(-4px, -2px); }
+      80% { transform: translate(3px, 3px); }
+    }
+    @keyframes hidden-shimmer {
+      0% { transform: translateX(-140%) skewX(-18deg); }
+      100% { transform: translateX(340%) skewX(-18deg); }
+    }
+    @keyframes hidden-fade-up {
+      0% { opacity: 0; transform: translateY(18px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes hidden-sparkle {
+      0%, 100% { transform: scale(0.3) rotate(0deg); opacity: 0; }
+      50% { transform: scale(1.2) rotate(90deg); opacity: 1; }
+    }
+    @keyframes hidden-exit {
+      0% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1.25); }
+    }
+    .hidden-intro-exit {
+      animation: hidden-exit 0.6s ease-in forwards;
+    }
+    .hidden-rays {
+      animation: hidden-rays-spin 14s linear infinite;
+    }
+    .hidden-flash {
+      animation: hidden-flash 0.55s ease-out forwards;
+    }
+    .hidden-ring {
+      animation: hidden-ring-pulse 2.2s ease-out infinite backwards;
+    }
+    .hidden-title {
+      animation: hidden-shake 0.5s ease-in-out 1.05s both;
+    }
+    .hidden-letter {
+      display: inline-block;
+      animation: hidden-letter-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+    .hidden-shimmer {
+      animation: hidden-shimmer 1.6s ease-in-out 1.2s infinite backwards;
+    }
+    .hidden-fade-up {
+      animation: hidden-fade-up 0.6s ease both;
+    }
+    .hidden-sparkle {
+      animation: hidden-sparkle 1.8s ease-in-out infinite backwards;
+    }
   </style>
 </head>
 <body>
@@ -163,6 +233,7 @@
     <div id="root"></div>
   </div>
   <audio id="final-jeopardy-theme" src="/wilsonwang/jeopardy-theme.mp3" preload="auto"></audio>
+  <audio id="hidden-game-fanfare" src="/wilsonwang/koiroylers-tada-fanfare-356032.mp3" preload="auto"></audio>
 
   <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
   <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
@@ -176,7 +247,13 @@
         name: 'All About Angela',
         clues: [
           { value: 100, question: 'If this ingredient shows up in Angela’s food, she’s picking it out.', answer: 'Onion' },
-          { value: 200, question: 'This is the type of restaurant Angela’s family runs.', answer: 'Hong Kong Style Cafe' },
+          // { value: 200, question: 'This is the type of restaurant Angela’s family runs.', answer: 'Hong Kong Style Cafe' },
+          {
+            value: 200,
+            question: 'Put A Ring On It!',
+            hidden: true,
+            instructions: 'Send two people up for a relay. Each teammate gets 45 seconds to hook peach rings using only a stick in their mouth and carry them to the other side of the room. The team with the most peach rings wins!',
+          },
           { value: 300, question: 'This is the TV show Angela has watched religiously since the eighth grade.', answer: 'The Bachelor' },
           { value: 400, question: 'This is the fruit Angela loves the most.', answer: 'Durian' },
           { value: 500, question: 'Round to the nearest 10. How many members of Angela’s family live in SF bay area?', answer: '60' },
@@ -187,8 +264,13 @@
         clues: [
           { value: 100, question: 'Bang Bang _____ Gang. Name Wilson’s favorite NFL football team', answer: '49ers' },
           { value: 200, question: 'This is Wilson’s favorite sweet treat.', answer: 'Donuts' },
-          { value: 300, question: 'Keep this away from Wilson — he’s allergic', answer: 'Cats' },
-          { value: 400, question: 'Wilson recently broke a bone. What did he break? (Be specific)', answer: 'Right pinky finger' },
+          { value: 300, question: 'Wilson recently broke a bone. What did he break? (Be specific)', answer: 'Right pinky finger' },
+          {
+            value: 400,
+            question: 'Ready, Set, Donut!',
+            hidden: true,
+            instructions: 'Send 1 person up. Hands behind your back — race to finish the donut!',
+          },
           { value: 500, question: 'Name all the bay area cities Wilson has lived in. (Hint: 6)', answer: 'Castro Valley, San Ramon, Dublin, Berkeley, Fremont, San Francisco' },
         ],
       },
@@ -198,7 +280,7 @@
           { value: 100, question: 'Although Hinge is how they met, this is the school they both attended.', answer: 'UC Berkeley' },
           { value: 200, question: 'Unlike Mandarin, this is the Chinese dialect Angela and Wilson both speak.', answer: 'Cantonese' },
           { value: 300, question: 'What’s the couple’s favorite kind of chocolate?', answer: 'White chocolate' },
-          { value: 400, question: 'Name the two activities they each competed in growing up.', answer: 'Angela: Chinese calligraphy\nWilson: karate' },
+          { value: 400, question: 'Growing up, Angela and Wilson competed in different activities for the same number of years. Name each activity and the number of years.', answer: 'Angela: Chinese calligraphy\nWilson: karate\nBoth for 12 years!' },
           { value: 500, question: 'Six full-time companies between them, three apiece. What are they?', answer: 'Angela: Accenture, Salesforce, Visa\nWilson: Samsara, Twitch, Uber ' },
         ],
       },
@@ -215,17 +297,21 @@
       {
         name: 'Wildcard',
         clues: [
-          { value: 100, question: "Angela and Wilson's anniversary is on 8/21. What is 8 x 21?", answer: '168' },
+          { value: 100, question: "Angela and Wilson's anniversary is on 8/21/22. What is 8 x 21 x 22?", answer: '3696' },
           { value: 200, question: 'The couple went rug tufting. What is on the rug?', answer: 'Duck holding a spatula', answerImage: 'wildcard/200-duck.jpg' },
-          { value: 300, question: '', answer: '' },
-          { value: 400, question: '', answer: '' },
-          { value: 500, question: '', answer: '' },
+          { value: 300, question: "What is Wilson's Twitch handle?", answer: 'ww_dubby_dubs' },
+          { value: 400, question: 'Name the elementary, middle, and high schools Angela attended.', answer: 'Gordon J. Lau, Francisco, Galileo' },
+          {
+            value: 500,
+            question: 'Til Nuggets Do Us Part',
+            hidden: true,
+            instructions: 'Send three people up. Relay order: 5 nuggets, then 3, then 2. Fastest team wins.',
+          },
         ],
       },
     ];
 
     const FINAL_CLUE = {
-      category: 'Angela & Wilson',
       question: 'How many days from the first day they were official to the proposal day? Closest answer wins.',
       answer: '1,399 days',
     };
@@ -256,8 +342,8 @@
     }
 
     function Setup({ onStart }) {
-      const [numTeams, setNumTeams] = useState(2);
-      const [names, setNames] = useState(['', '']);
+      const [numTeams, setNumTeams] = useState(4);
+      const [names, setNames] = useState(['', '', '', '']);
 
       const handleNumChange = (n) => {
         const clamped = Math.max(1, Math.min(8, n));
@@ -278,6 +364,7 @@
       };
 
       return (
+        <React.Fragment>
         <div className="fade-in" style={styles.setupCard}>
           <h1 style={styles.title}>Angie &amp; Willy Jeopardy</h1>
           <DoodleUnderline />
@@ -312,6 +399,16 @@
             Begin the Game
           </button>
         </div>
+        <button
+          onClick={() => onStart(
+            names.map((n) => ({ name: n.trim() || 'Unnamed Team', score: 0 })),
+            true
+          )}
+          style={styles.devBtn}
+        >
+          Skip to FJ
+        </button>
+        </React.Fragment>
       );
     }
 
@@ -385,12 +482,27 @@
       );
     }
 
-    function Scoreboard({ teams, onAdjust }) {
+    function Scoreboard({ teams, onSetScore }) {
+      const [editingTeam, setEditingTeam] = useState(null);
+      const [scoreDraft, setScoreDraft] = useState('');
       const maxScore = Math.max(...teams.map((t) => t.score));
       const hasLeader = maxScore > 0 && teams.filter((t) => t.score === maxScore).length === 1;
       const ordered = teams
         .map((t, i) => ({ ...t, origIdx: i }))
         .sort((a, b) => b.score - a.score);
+
+      const beginEditing = (team) => {
+        if (!onSetScore) return;
+        setEditingTeam(team.origIdx);
+        setScoreDraft(String(team.score));
+      };
+
+      const saveScore = () => {
+        if (editingTeam === null) return;
+        const nextScore = Number(scoreDraft);
+        if (Number.isFinite(nextScore)) onSetScore(editingTeam, Math.round(nextScore));
+        setEditingTeam(null);
+      };
 
       return (
         <div style={styles.scoreboard}>
@@ -402,7 +514,29 @@
                   {isLeader && <span style={styles.crown}>👑</span>}
                   {t.name}
                 </div>
-                <AnimatedScore value={t.score} />
+                {editingTeam === t.origIdx ? (
+                  <input
+                    autoFocus
+                    type="number"
+                    value={scoreDraft}
+                    onChange={(e) => setScoreDraft(e.target.value)}
+                    onBlur={saveScore}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') e.currentTarget.blur();
+                      if (e.key === 'Escape') setEditingTeam(null);
+                    }}
+                    style={styles.scoreEditInput}
+                    aria-label={`Edit ${t.name} score`}
+                  />
+                ) : (
+                  <span
+                    onDoubleClick={() => beginEditing(t)}
+                    title={onSetScore ? 'Double-click to edit' : undefined}
+                    style={{ cursor: onSetScore ? 'text' : 'default' }}
+                  >
+                    <AnimatedScore value={t.score} />
+                  </span>
+                )}
               </div>
             );
           })}
@@ -410,12 +544,147 @@
       );
     }
 
+    function HiddenGameIntro({ label, onDone }) {
+      const [exiting, setExiting] = useState(false);
+      const timersRef = useRef([]);
+      const onDoneRef = useRef(onDone);
+      onDoneRef.current = onDone;
+
+      const finish = () => {
+        timersRef.current.forEach(clearTimeout);
+        setExiting(true);
+        timersRef.current = [setTimeout(() => onDoneRef.current(), 600)];
+      };
+
+      useEffect(() => {
+        timersRef.current = [setTimeout(finish, 3400)];
+        return () => timersRef.current.forEach(clearTimeout);
+      }, []);
+
+      const sparkles = React.useMemo(
+        () =>
+          Array.from({ length: 18 }).map((_, i) => ({
+            id: i,
+            top: Math.random() * 100,
+            left: Math.random() * 100,
+            size: 0.8 + Math.random() * 1.6,
+            delay: Math.random() * 1.8,
+          })),
+        []
+      );
+
+      const letters = 'HIDDEN GAME'.split('');
+
+      return (
+        <div
+          className={exiting ? 'hidden-intro-exit' : ''}
+          style={styles.hiddenIntro}
+        >
+          <div className="hidden-rays" style={styles.hiddenRays} aria-hidden="true" />
+          <div className="hidden-ring" style={styles.hiddenRing} aria-hidden="true" />
+          <div
+            className="hidden-ring"
+            style={{ ...styles.hiddenRing, animationDelay: '0.7s' }}
+            aria-hidden="true"
+          />
+          <div
+            className="hidden-ring"
+            style={{ ...styles.hiddenRing, animationDelay: '1.4s' }}
+            aria-hidden="true"
+          />
+          {sparkles.map((s) => (
+            <span
+              key={s.id}
+              className="hidden-sparkle"
+              aria-hidden="true"
+              style={{
+                position: 'absolute',
+                top: `${s.top}%`,
+                left: `${s.left}%`,
+                fontSize: `${s.size}rem`,
+                animationDelay: `${s.delay}s`,
+              }}
+            >
+              ✦
+            </span>
+          ))}
+          <div className="hidden-flash" style={styles.hiddenFlashLayer} aria-hidden="true" />
+
+          <div style={styles.hiddenInner}>
+            <div
+              className="hidden-fade-up"
+              style={{ ...styles.hiddenEyebrow, animationDelay: '0.8s' }}
+            >
+              You found a
+            </div>
+            <div style={styles.hiddenRow}>
+              <div className="hidden-title" style={styles.hiddenTitle}>
+                {letters.map((ch, i) => (
+                  <span
+                    key={i}
+                    className="hidden-letter"
+                    style={{
+                      animationDelay: `${i * 0.07}s`,
+                      width: ch === ' ' ? '0.4em' : undefined,
+                    }}
+                  >
+                    {ch === ' ' ? '\u00a0' : ch}
+                  </span>
+                ))}
+                <span style={styles.hiddenShimmerMask} aria-hidden="true">
+                  <span className="hidden-shimmer" style={styles.hiddenShimmer} />
+                </span>
+              </div>
+            </div>
+            <div style={styles.hiddenRow}>
+              <div
+                className="hidden-fade-up"
+                style={{ ...styles.hiddenSub, animationDelay: '1.5s' }}
+              >
+                {label}
+              </div>
+            </div>
+          </div>
+        </div>
+      );
+    }
+
     function CluePanel({ clue, category, teams, onAdjust, onClose }) {
+      const [showIntro, setShowIntro] = useState(Boolean(clue.hidden));
       const [showAnswer, setShowAnswer] = useState(false);
       const [pending, setPending] = useState({}); // { teamIdx: netDelta }
+      const [wagerAmount, setWagerAmount] = useState({});
 
       const handleAdjust = (teamIdx, delta) => {
         setPending((prev) => ({ ...prev, [teamIdx]: (prev[teamIdx] || 0) + delta }));
+      };
+
+      const applyWager = (teamIdx, won) => {
+        const score = teams[teamIdx].score;
+        const entered = Math.max(0, Number(wagerAmount[teamIdx]) || 0);
+
+        if (score < 0) {
+          setPending((prev) => ({ ...prev, [teamIdx]: won ? -score : 0 }));
+          return;
+        }
+        if (score === 0) {
+          setPending((prev) => ({ ...prev, [teamIdx]: won ? clue.value : 0 }));
+          return;
+        }
+
+        const wager = Math.min(entered, score);
+        if (!wager) {
+          setPending((prev) => ({ ...prev, [teamIdx]: 0 }));
+          return;
+        }
+        setPending((prev) => ({ ...prev, [teamIdx]: won ? wager : -wager }));
+      };
+
+      const handleWagerChange = (teamIdx, value) => {
+        setWagerAmount((prev) => ({ ...prev, [teamIdx]: value }));
+        if ((Number(value) || 0) === 0) {
+          setPending((prev) => ({ ...prev, [teamIdx]: 0 }));
+        }
       };
 
       const handleDone = () => {
@@ -425,10 +694,29 @@
         onClose();
       };
 
+      const handleBackToInstructions = () => {
+        setShowAnswer(false);
+        setPending({});
+        setWagerAmount({});
+      };
+
+      if (showIntro) {
+        return (
+          <div style={styles.overlay}>
+            <HiddenGameIntro
+              label={clue.question}
+              onDone={() => setShowIntro(false)}
+            />
+          </div>
+        );
+      }
+
       return (
         <div style={styles.overlay}>
           <div className="fade-in" style={styles.cluePanel}>
-            <div style={styles.clueCategory}>{category} · ${clue.value}</div>
+            <div style={styles.clueCategory}>
+              {clue.hidden ? category : `${category} · $${clue.value}`}
+            </div>
             {clue.image && (
               <img
                 src={clue.image}
@@ -437,59 +725,126 @@
               />
             )}
             {clue.question ? (
-              <div style={showAnswer ? styles.clueTextSmall : styles.clueText}>{clue.question}</div>
+              <div
+                style={{
+                  ...(showAnswer ? styles.clueTextSmall : styles.clueText),
+                  ...(clue.instructions ? { marginBottom: '0.7rem' } : {}),
+                }}
+              >
+                {clue.question}
+              </div>
             ) : null}
+            {clue.instructions ? (
+              <div
+                style={
+                  showAnswer && clue.hidden
+                    ? { ...styles.clueInstructionsSmall, marginBottom: '2.5rem' }
+                    : showAnswer
+                      ? styles.clueInstructionsSmall
+                      : styles.clueInstructions
+                }
+              >
+                {clue.instructions}
+              </div>
+            ) : null}
+
+            {clue.hidden && !showAnswer && (
+              <div style={{ width: '100%', maxWidth: '600px' }}>
+                <div style={styles.scoringLabel}>Wager your points:</div>
+                <div style={{ ...styles.clueInstructionsSmall, maxWidth: '600px', marginBottom: '2.5rem' }}>
+                  Teams with points can wager up to their current score.<br />
+                  Teams at $0 or below can’t wager. A win takes a negative team back to $0, and gives a team at $0 the tile’s value.
+                </div>
+              </div>
+            )}
 
             {!showAnswer && (
               <button className="pill-btn" style={styles.revealBtn} onClick={() => setShowAnswer(true)}>
-                Reveal Answer
+                {clue.hidden ? 'Proceed' : 'Reveal Answer'}
               </button>
             )}
 
             {showAnswer && (
               <React.Fragment>
-                <div className="answer-reveal" style={styles.answerText}>{clue.answer}</div>
+                {clue.answer && (
+                  <div className="answer-reveal" style={styles.answerText}>{clue.answer}</div>
+                )}
                 {clue.answerImage && (
                   <div style={styles.answerImageSlot}>
                     <img className="answer-reveal" src={clue.answerImage} alt="" style={styles.answerImage} />
                   </div>
                 )}
-                <div style={styles.scoringLabel}>Award or deduct points</div>
-                <div style={styles.scoringList}>
+                <div style={styles.scoringLabel}>
+                  {clue.hidden ? 'Enter a wager, then mark the result' : 'Award or deduct points'}
+                </div>
+                <div style={clue.hidden ? { ...styles.scoringList, maxWidth: '820px' } : styles.scoringList}>
                   {teams.map((t, i) => {
                     const delta = pending[i] || 0;
                     return (
-                      <div key={i} style={styles.scoringRow}>
+                      <div key={i} style={clue.hidden ? styles.scoringRowWager : styles.scoringRow}>
                         <span style={styles.scoringName}>{t.name}</span>
-                        <span style={styles.scoringScore}>
-                          {formatMoney(t.score)}
-                          {delta !== 0 && (
-                            <span style={{ ...styles.pendingNote, color: delta > 0 ? '#2e7d4f' : '#b3261e' }}>
-                              {' '}({delta > 0 ? '+' : ''}{formatMoney(delta)} pending)
-                            </span>
-                          )}
+                        <span style={styles.scoringScore}>{formatMoney(t.score)}</span>
+                        <span style={{ ...styles.pendingCol, color: delta > 0 ? '#2e7d4f' : '#b3261e' }}>
+                          {delta !== 0 && `(${delta > 0 ? '+' : ''}${formatMoney(delta)} pending)`}
                         </span>
-                        <button
-                          className="pill-btn"
-                          style={styles.minusBtn}
-                          onClick={() => handleAdjust(i, -clue.value)}
-                        >
-                          − ${clue.value}
-                        </button>
-                        <button
-                          className="pill-btn"
-                          style={styles.plusBtn}
-                          onClick={() => handleAdjust(i, clue.value)}
-                        >
-                          + ${clue.value}
-                        </button>
+                        {clue.hidden ? (
+                          <React.Fragment>
+                            <span style={styles.wagerSlot}>
+                              {t.score > 0 ? (
+                                <input
+                                  type="number"
+                                  min="0"
+                                  max={t.score}
+                                  placeholder={`Up to $${t.score}`}
+                                  value={wagerAmount[i] || ''}
+                                  onChange={(e) => handleWagerChange(i, e.target.value)}
+                                  style={styles.customInput}
+                                />
+                              ) : (
+                                <span style={{ ...styles.pendingNote, whiteSpace: 'nowrap' }}>
+                                  {t.score < 0 ? 'Win → $0' : `Win → +$${clue.value}`}
+                                </span>
+                              )}
+                            </span>
+                            <button className="pill-btn" style={styles.minusBtn} onClick={() => applyWager(i, false)}>
+                              ✗ Lost
+                            </button>
+                            <button className="pill-btn" style={styles.plusBtn} onClick={() => applyWager(i, true)}>
+                              ✓ Won
+                            </button>
+                          </React.Fragment>
+                        ) : (
+                          <React.Fragment>
+                            <button
+                              className="pill-btn"
+                              style={styles.minusBtn}
+                              onClick={() => handleAdjust(i, -clue.value)}
+                            >
+                              − ${clue.value}
+                            </button>
+                            <button
+                              className="pill-btn"
+                              style={styles.plusBtn}
+                              onClick={() => handleAdjust(i, clue.value)}
+                            >
+                              + ${clue.value}
+                            </button>
+                          </React.Fragment>
+                        )}
                       </div>
                     );
                   })}
                 </div>
-                <button className="pill-btn" style={styles.secondaryBtn} onClick={handleDone}>
-                  Back to Board
-                </button>
+                <div style={{ display: 'flex', gap: '0.75rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+                  {clue.hidden && (
+                    <button className="pill-btn" style={styles.secondaryBtn} onClick={handleBackToInstructions}>
+                      Back to Instructions
+                    </button>
+                  )}
+                  <button className="pill-btn" style={styles.secondaryBtn} onClick={handleDone}>
+                    Back to Board
+                  </button>
+                </div>
               </React.Fragment>
             )}
           </div>
@@ -602,7 +957,6 @@
           <div className="fade-in" style={styles.cluePanel}>
             <div style={styles.finalLabel}>Final Jeopardy</div>
             <DoodleUnderline />
-            <div style={styles.finalCategory}>{FINAL_CLUE.category}</div>
 
             {stage === 'hidden' && (
               <React.Fragment>
@@ -622,7 +976,7 @@
                   {timeUp ? "Time's Up!" : timeLeft}
                 </div>
                 <button className="pill-btn" style={styles.revealBtn} onClick={onDone}>
-                  Reveal Answer
+                  Enter Wagers
                 </button>
               </React.Fragment>
             )}
@@ -634,16 +988,31 @@
     function FinalJeopardyScoring({ teams, onAdjust, onDone }) {
       const [pending, setPending] = useState({});
       const [wagerAmount, setWagerAmount] = useState({});
+      const [showAnswer, setShowAnswer] = useState(false);
+
+      const maxWagerFor = (i) => Math.max(0, teams[i].score);
 
       const applyResult = (i, correct) => {
-        const wager = Number(wagerAmount[i]) || 0;
+        const entered = Math.max(0, Number(wagerAmount[i]) || 0);
+        const wager = Math.min(entered, maxWagerFor(i));
         if (!wager) return;
         const delta = correct ? wager : -wager;
         setPending((prev) => ({ ...prev, [i]: (prev[i] || 0) + delta }));
       };
 
       const handleWagerChange = (i, value) => {
-        setWagerAmount((prev) => ({ ...prev, [i]: value }));
+        if (value === '') {
+          setWagerAmount((prev) => ({ ...prev, [i]: '' }));
+          return;
+        }
+        const entered = Number(value);
+        if (!Number.isFinite(entered) || entered < 0) return;
+        const max = maxWagerFor(i);
+        const clamped = Math.min(entered, max);
+        setWagerAmount((prev) => ({
+          ...prev,
+          [i]: clamped === entered ? value : String(clamped),
+        }));
       };
 
       const handleDone = () => {
@@ -658,50 +1027,70 @@
           <div className="fade-in" style={styles.cluePanel}>
             <div style={styles.finalLabel}>Final Jeopardy</div>
             <DoodleUnderline />
-            <div className="answer-reveal" style={styles.answerText}>{FINAL_CLUE.answer}</div>
-            <div style={styles.scoringLabel}>Award or deduct points</div>
-            <div style={styles.scoringList}>
+            {showAnswer && (
+              <div className="answer-reveal" style={styles.answerText}>{FINAL_CLUE.answer}</div>
+            )}
+            <div style={{ ...styles.scoringLabel, marginBottom: showAnswer ? '1.25rem' : '0.4rem' }}>
+              {showAnswer ? 'Award or deduct points' : 'Enter each team’s wager'}
+            </div>
+            {!showAnswer && (
+              <div style={{ ...styles.clueInstructionsSmall, maxWidth: '600px', marginBottom: '1.25rem' }}>
+                Each team can wager up to their current score.
+              </div>
+            )}
+            <div style={{ ...styles.scoringList, maxWidth: '860px' }}>
               {teams.map((t, i) => {
                 const delta = pending[i] || 0;
                 return (
-                  <div key={i} style={styles.scoringRow}>
+                  <div key={i} style={styles.scoringRowWager}>
                     <span style={styles.scoringName}>{t.name}</span>
-                    <span style={styles.scoringScore}>
-                      {formatMoney(t.score)}
-                      {delta !== 0 && (
-                        <span style={{ ...styles.pendingNote, color: delta > 0 ? '#2e7d4f' : '#b3261e' }}>
-                          {' '}({delta > 0 ? '+' : ''}{formatMoney(delta)} pending)
-                        </span>
-                      )}
+                    <span style={styles.scoringScore}>{formatMoney(t.score)}</span>
+                    <span style={{ ...styles.pendingCol, color: delta > 0 ? '#2e7d4f' : '#b3261e' }}>
+                      {delta !== 0 && `(${delta > 0 ? '+' : ''}${formatMoney(delta)} pending)`}
                     </span>
-                    <input
-                      type="number"
-                      placeholder="Wager $"
-                      value={wagerAmount[i] || ''}
-                      onChange={(e) => handleWagerChange(i, e.target.value)}
-                      style={styles.customInput}
-                    />
-                    <button className="pill-btn" style={styles.minusBtn} onClick={() => applyResult(i, false)}>
-                      ✗ Incorrect
-                    </button>
-                    <button className="pill-btn" style={styles.plusBtn} onClick={() => applyResult(i, true)}>
-                      ✓ Correct
-                    </button>
+                    <span style={styles.wagerSlot}>
+                      <input
+                        type="number"
+                        min="0"
+                        max={maxWagerFor(i)}
+                        placeholder={t.score > 0 ? `Up to $${t.score}` : 'Up to $0'}
+                        value={wagerAmount[i] || ''}
+                        onChange={(e) => handleWagerChange(i, e.target.value)}
+                        style={styles.customInput}
+                        disabled={showAnswer || t.score <= 0}
+                      />
+                    </span>
+                    {showAnswer && (
+                      <React.Fragment>
+                        <button className="pill-btn" style={styles.minusBtn} onClick={() => applyResult(i, false)}>
+                          ✗ Incorrect
+                        </button>
+                        <button className="pill-btn" style={styles.plusBtn} onClick={() => applyResult(i, true)}>
+                          ✓ Correct
+                        </button>
+                      </React.Fragment>
+                    )}
                   </div>
                 );
               })}
             </div>
-            <button className="pill-btn" style={styles.secondaryBtn} onClick={handleDone}>
-              Finish Game
-            </button>
+            {showAnswer ? (
+              <button className="pill-btn" style={styles.secondaryBtn} onClick={handleDone}>
+                Finish Game
+              </button>
+            ) : (
+              <button className="pill-btn" style={{ ...styles.revealBtn, marginTop: '2rem' }} onClick={() => setShowAnswer(true)}>
+                Reveal Answer
+              </button>
+            )}
           </div>
         </div>
       );
     }
 
-    function GameBoard({ board, setBoard, teams, setTeams }) {
+    function GameBoard({ board, setBoard, teams, setTeams, startAtFinal }) {
       const [active, setActive] = useState(null); // { catIdx, clueIdx }
-      const [finalPhase, setFinalPhase] = useState('board'); // 'board' | 'question' | 'scoring' | 'done'
+      const [finalPhase, setFinalPhase] = useState(startAtFinal ? 'question' : 'board'); // 'board' | 'question' | 'scoring' | 'done'
       const cheatRef = useRef(0);
 
       const handleTitleTap = () => {
@@ -718,7 +1107,15 @@
       };
 
       const openClue = (catIdx, clueIdx) => {
-        if (board[catIdx].clues[clueIdx].revealed) return;
+        const clue = board[catIdx].clues[clueIdx];
+        if (clue.revealed) return;
+        if (clue.hidden) {
+          const audio = document.getElementById('hidden-game-fanfare');
+          if (audio) {
+            audio.currentTime = 0;
+            audio.play().catch(() => {});
+          }
+        }
         setActive({ catIdx, clueIdx });
       };
 
@@ -735,6 +1132,14 @@
         setTeams((prev) => {
           const next = [...prev];
           next[teamIdx] = { ...next[teamIdx], score: next[teamIdx].score + delta };
+          return next;
+        });
+      };
+
+      const setScore = (teamIdx, score) => {
+        setTeams((prev) => {
+          const next = [...prev];
+          next[teamIdx] = { ...next[teamIdx], score };
           return next;
         });
       };
@@ -761,7 +1166,7 @@
         <div>
           <h1 style={styles.title} onClick={handleTitleTap}>Angie &amp; Willy Jeopardy</h1>
           <DoodleUnderline />
-          <Scoreboard teams={teams} />
+          <Scoreboard teams={teams} onSetScore={setScore} />
 
           <div style={{ position: 'relative' }}>
             <div style={styles.board}>
@@ -832,10 +1237,17 @@
       const [phase, setPhase] = useState('setup'); // 'setup' | 'playing'
       const [teams, setTeams] = useState([]);
       const [board, setBoard] = useState(buildInitialBoard());
+      const [startAtFinal, setStartAtFinal] = useState(false);
 
-      const startGame = (initialTeams) => {
+      const startGame = (initialTeams, skipToFinal = false) => {
         setTeams(initialTeams);
-        setBoard(buildInitialBoard());
+        setBoard(
+          buildInitialBoard().map((cat) => ({
+            ...cat,
+            clues: cat.clues.map((clue) => ({ ...clue, revealed: skipToFinal })),
+          }))
+        );
+        setStartAtFinal(skipToFinal);
         setPhase('playing');
       };
 
@@ -843,7 +1255,15 @@
         return <Setup onStart={startGame} />;
       }
 
-      return <GameBoard board={board} setBoard={setBoard} teams={teams} setTeams={setTeams} />;
+      return (
+        <GameBoard
+          board={board}
+          setBoard={setBoard}
+          teams={teams}
+          setTeams={setTeams}
+          startAtFinal={startAtFinal}
+        />
+      );
     }
 
     const styles = {
@@ -863,6 +1283,20 @@
         letterSpacing: '0.12em',
         textTransform: 'uppercase',
         marginBottom: '1.75rem',
+      },
+      devBtn: {
+        position: 'fixed',
+        bottom: '1rem',
+        right: '1rem',
+        zIndex: 50,
+        fontSize: '0.7rem',
+        padding: '0.2rem 0.4rem',
+        borderRadius: '6px',
+        border: '1px solid rgba(116, 45, 73, 0.2)',
+        background: 'transparent',
+        color: 'rgba(116, 45, 73, 0.4)',
+        cursor: 'pointer',
+        outline: 'none',
       },
       setupCard: {
         maxWidth: '480px',
@@ -949,11 +1383,10 @@
         letterSpacing: '0.03em',
       },
       secondaryBtn: {
-        display: 'block',
-        width: '100%',
-        maxWidth: '600px',
+        display: 'inline-block',
+        width: 'auto',
         marginTop: '1.5rem',
-        padding: '0.8rem',
+        padding: '0.8rem 2.5rem',
         borderRadius: '999px',
         border: '2px solid #742d49',
         background: 'transparent',
@@ -975,9 +1408,10 @@
         borderRadius: '14px',
         padding: '0.85rem 1.1rem',
         display: 'flex',
+        flexDirection: 'column',
         alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: '0.75rem',
+        justifyContent: 'center',
+        gap: '0.25rem',
         flex: '1 1 0',
         minWidth: '140px',
       },
@@ -985,12 +1419,9 @@
         fontSize: '0.82rem',
         color: 'rgba(116, 45, 73, 0.65)',
         fontWeight: 600,
-        textAlign: 'left',
-        whiteSpace: 'nowrap',
-        overflow: 'hidden',
-        textOverflow: 'ellipsis',
-        flex: '1 1 auto',
-        minWidth: 0,
+        textAlign: 'center',
+        overflowWrap: 'anywhere',
+        maxWidth: '100%',
       },
       scoreValueWrap: {
         position: 'relative',
@@ -999,6 +1430,7 @@
       scoreValue: {
         display: 'inline-block',
         width: '6ch',
+        textAlign: 'center',
         fontVariantNumeric: 'tabular-nums',
         fontSize: '2rem',
         fontWeight: 700,
@@ -1008,6 +1440,18 @@
       },
       scoreValueFlash: {
         transform: 'scale(1.2)',
+      },
+      scoreEditInput: {
+        width: '6ch',
+        padding: '0.2rem 0.35rem',
+        border: '2px solid #742d49',
+        borderRadius: '8px',
+        color: '#742d49',
+        fontFamily: "'Poppins', sans-serif",
+        fontSize: '1.5rem',
+        fontWeight: 700,
+        textAlign: 'right',
+        outline: 'none',
       },
       scoreCardLeader: {
         borderColor: '#c9a227',
@@ -1187,6 +1631,101 @@
         overflowY: 'auto',
         position: 'relative',
       },
+      hiddenIntro: {
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        background: 'radial-gradient(circle at 50% 45%, #8e3a5c 0%, #742d49 45%, #3f1728 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        userSelect: 'none',
+      },
+      hiddenRays: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        width: '220vmax',
+        height: '220vmax',
+        background:
+          'repeating-conic-gradient(from 0deg, rgba(201, 162, 39, 0.22) 0deg 5deg, transparent 5deg 13deg)',
+        transformOrigin: 'center',
+        pointerEvents: 'none',
+      },
+      hiddenRing: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        width: '46vmin',
+        height: '46vmin',
+        borderRadius: '50%',
+        border: '3px solid rgba(255, 250, 246, 0.5)',
+        pointerEvents: 'none',
+      },
+      hiddenFlashLayer: {
+        position: 'absolute',
+        inset: 0,
+        background: '#fffaf6',
+        pointerEvents: 'none',
+      },
+      hiddenInner: {
+        position: 'relative',
+        zIndex: 2,
+        textAlign: 'center',
+        padding: '2rem 6vw',
+      },
+      hiddenEyebrow: {
+        fontFamily: "'Caveat', cursive",
+        fontSize: 'clamp(1.6rem, 4vw, 2.6rem)',
+        fontWeight: 700,
+        color: 'rgba(255, 250, 246, 0.8)',
+        marginBottom: '0.5rem',
+      },
+      hiddenRow: {
+        display: 'block',
+        textAlign: 'center',
+      },
+      hiddenTitle: {
+        position: 'relative',
+        display: 'inline-block',
+        fontFamily: "'Poppins', sans-serif",
+        fontSize: 'clamp(3rem, 12vw, 9rem)',
+        fontWeight: 800,
+        letterSpacing: '0.04em',
+        lineHeight: 1.05,
+        color: '#f6d876',
+        textShadow:
+          '0 0 18px rgba(201, 162, 39, 0.65), 0 6px 0 #5d2239, 0 14px 34px rgba(0, 0, 0, 0.45)',
+      },
+      hiddenShimmerMask: {
+        position: 'absolute',
+        inset: 0,
+        overflow: 'hidden',
+        pointerEvents: 'none',
+      },
+      hiddenShimmer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '28%',
+        height: '100%',
+        background:
+          'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75), transparent)',
+        pointerEvents: 'none',
+      },
+      hiddenSub: {
+        fontFamily: "'Poppins', sans-serif",
+        fontSize: 'clamp(1.1rem, 3vw, 2rem)',
+        fontWeight: 600,
+        letterSpacing: '0.16em',
+        textTransform: 'uppercase',
+        color: '#fffaf6',
+        marginTop: '1.5rem',
+        border: '2px solid rgba(246, 216, 118, 0.7)',
+        borderRadius: '999px',
+        padding: '0.6rem 1.8rem',
+        display: 'inline-block',
+      },
       clueCategory: {
         fontFamily: "'Caveat', cursive",
         fontSize: '2.2rem',
@@ -1232,6 +1771,24 @@
         lineHeight: 1.4,
         maxWidth: '1100px',
       },
+      clueInstructions: {
+        fontFamily: "'Poppins', sans-serif",
+        fontSize: 'clamp(1rem, 2.2vw, 1.45rem)',
+        fontWeight: 500,
+        color: 'rgba(116, 45, 73, 0.7)',
+        marginBottom: '2.5rem',
+        lineHeight: 1.45,
+        maxWidth: '780px',
+      },
+      clueInstructionsSmall: {
+        fontFamily: "'Poppins', sans-serif",
+        fontSize: 'clamp(0.85rem, 1.7vw, 1.1rem)',
+        fontWeight: 500,
+        color: 'rgba(116, 45, 73, 0.65)',
+        marginBottom: '1.5rem',
+        lineHeight: 1.45,
+        maxWidth: '780px',
+      },
       answerText: {
         fontFamily: "'Poppins', sans-serif",
         fontSize: 'clamp(2.4rem, 5vw, 3.7rem)',
@@ -1274,36 +1831,68 @@
         flexDirection: 'column',
         gap: '0.6rem',
         width: '100%',
-        maxWidth: '600px',
+        maxWidth: '700px',
       },
       scoringRow: {
-        display: 'flex',
-        flexWrap: 'wrap',
+        display: 'grid',
+        gridTemplateColumns: 'minmax(8rem, 1fr) 4.5rem 9.5rem auto auto',
         alignItems: 'center',
-        gap: '0.6rem',
+        columnGap: '0.65rem',
         background: '#ffffff',
         border: '2px solid rgba(116, 45, 73, 0.25)',
         borderRadius: '14px',
         padding: '0.75rem 1rem',
       },
+      scoringRowWager: {
+        display: 'grid',
+        gridTemplateColumns: 'minmax(8rem, 1fr) 4.5rem 9.5rem 10rem auto auto',
+        alignItems: 'center',
+        columnGap: '0.65rem',
+        background: '#ffffff',
+        border: '2px solid rgba(116, 45, 73, 0.25)',
+        borderRadius: '14px',
+        padding: '0.75rem 1rem',
+      },
+      pendingCol: {
+        fontWeight: 700,
+        fontSize: '0.9rem',
+        textAlign: 'left',
+        justifySelf: 'start',
+        whiteSpace: 'nowrap',
+      },
       scoringName: {
-        flex: 1,
+        flex: '1 1 auto',
+        minWidth: 0,
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        whiteSpace: 'nowrap',
         fontWeight: 600,
         fontSize: '1rem',
         color: '#742d49',
         textAlign: 'left',
       },
       scoringScore: {
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'flex-end',
+        justifyContent: 'center',
+        textAlign: 'right',
         fontWeight: 700,
         fontSize: '1rem',
         color: '#742d49',
-        marginRight: '0.5rem',
+      },
+      wagerSlot: {
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
       },
       pendingNote: {
         fontWeight: 700,
         color: 'rgba(116, 45, 73, 0.55)',
       },
       minusBtn: {
+        flexShrink: 0,
+        whiteSpace: 'nowrap',
         border: '2px solid #742d49',
         background: '#fff',
         color: '#742d49',
@@ -1314,6 +1903,8 @@
         cursor: 'pointer',
       },
       plusBtn: {
+        flexShrink: 0,
+        whiteSpace: 'nowrap',
         border: 'none',
         background: '#742d49',
         color: '#fff',
@@ -1328,13 +1919,6 @@
         fontSize: 'clamp(3rem, 7vw, 4.5rem)',
         fontWeight: 700,
         color: '#742d49',
-      },
-      finalCategory: {
-        fontFamily: "'Caveat', cursive",
-        fontSize: '2rem',
-        fontWeight: 700,
-        color: '#742d49',
-        marginBottom: '1rem',
       },
       finalInstructions: {
         fontSize: 'clamp(0.8rem, 2vw, 1rem)',
@@ -1355,7 +1939,8 @@
         fontSize: '2rem',
       },
       customInput: {
-        width: '90px',
+        flexShrink: 0,
+        width: '8.5rem',
         padding: '0.4rem 0.6rem',
         borderRadius: '999px',
         border: '2px solid rgba(116, 45, 73, 0.3)',
